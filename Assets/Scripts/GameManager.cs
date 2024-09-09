@@ -12,20 +12,27 @@ public class GameManager : MonoBehaviour
     private int playerScore = 0;
     private int aiScore = 0;
     public event EventHandler OnScoreChanged;
+    public event EventHandler OnBallSpawned;
+    private GameObject ball;
     private void Awake()
     {
         Instance = this;
         //Instantiate Ball and subscribe to events
+        
+    }
+
+    private void Start()
+    {
         SpawnBall();
     }
 
     private void SpawnBall()
     {
-
-       GameObject ball = Instantiate(ballPrefab);
+        ball = Instantiate(ballPrefab);
         Ball ballScript = ball.GetComponent<Ball>();
         ballScript.OnPlayerGoalEntered += Ball_OnPlayerGoalEntered;
         ballScript.OnAIGoalEntered += Ball_OnAIGoalEntered;
+        OnBallSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     private void Ball_OnAIGoalEntered(object sender, System.EventArgs e)
@@ -52,5 +59,10 @@ public class GameManager : MonoBehaviour
     public int GetAIScore()
     {
         return aiScore;
+    }
+
+    public GameObject GetBall()
+    {
+        return ball;
     }
 }

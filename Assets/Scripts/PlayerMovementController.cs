@@ -7,6 +7,8 @@ public class PlayerMovementController : MonoBehaviour
     public float speed = 5f;
     private float moveDirection;
     private PongInput inputActions;
+    private float minY = -3f;
+    private float maxY = 3f;
 
 
     private void Awake()
@@ -45,7 +47,12 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Update()
     {
-        Vector3 movement = new Vector3(0, moveDirection, 0) * speed * Time.deltaTime;
+        Vector2 movement = new Vector2(0, moveDirection) * speed * Time.deltaTime;
         transform.Translate(movement);
+        Vector2 clampedPosition = transform.position;
+        clampedPosition.y = Mathf.Clamp(clampedPosition.y, minY, maxY);
+        transform.position = clampedPosition;
     }
+
+    
 }
