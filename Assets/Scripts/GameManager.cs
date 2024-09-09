@@ -9,14 +9,18 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; }
 
+    public int winThreshold = 5;
+
     private int playerScore = 0;
     private int aiScore = 0;
     public event EventHandler OnScoreChanged;
     public event EventHandler OnBallSpawned;
+    public event EventHandler OnGameEnded;
     private GameObject ball;
     private void Awake()
     {
         Instance = this;
+        Time.timeScale = 1;
         //Instantiate Ball and subscribe to events
         
     }
@@ -38,17 +42,33 @@ public class GameManager : MonoBehaviour
     private void Ball_OnAIGoalEntered(object sender, System.EventArgs e)
     {
         playerScore++;
+        if (playerScore >= winThreshold)
+        {
+            GameOver();
+        }
         OnScoreChanged?.Invoke(this, EventArgs.Empty);
         Debug.Log("Player Scored");
+        Destroy(ball);
         SpawnBall();
     }
 
     private void Ball_OnPlayerGoalEntered(object sender, System.EventArgs e)
     {
         aiScore++;
+        if (aiScore >= winThreshold)
+        {
+            GameOver();
+        }
         OnScoreChanged?.Invoke(this, EventArgs.Empty);
         Debug.Log("AI Scored");
+        Destroy(ball);
         SpawnBall();
+    }
+
+    private void GameOver()
+    {
+        Time.timeScale = 0;
+        OnGameEnded?.Invoke(this, EventArgs.Empty);
     }
 
     public int GetPlayerScore()
