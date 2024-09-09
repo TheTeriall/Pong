@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public event EventHandler OnScoreChanged;
     public event EventHandler OnBallSpawned;
     public event EventHandler OnGameEnded;
+    public event EventHandler OnScored;
     private GameObject ball;
     private void Awake()
     {
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
 
     private void Ball_OnAIGoalEntered(object sender, System.EventArgs e)
     {
+        OnScored?.Invoke(this, EventArgs.Empty);
         playerScore++;
         if (playerScore >= winThreshold)
         {
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour
 
     private void Ball_OnPlayerGoalEntered(object sender, System.EventArgs e)
     {
+        OnScored?.Invoke(this, EventArgs.Empty);
         aiScore++;
         if (aiScore >= winThreshold)
         {

@@ -10,11 +10,13 @@ public class Ball : MonoBehaviour
     private Rigidbody2D rb;
     public event EventHandler OnPlayerGoalEntered;
     public event EventHandler OnAIGoalEntered;
+    private AudioSource audioSource;
 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
         // Create random Movement in one of the four directions
         movementDirection = GetRandomVector();
         rb.velocity = movementDirection * speed;
@@ -33,6 +35,11 @@ public class Ball : MonoBehaviour
         int randomIndex = UnityEngine.Random.Range(0, possibleVectors.Length);
 
         return possibleVectors[randomIndex];
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        audioSource.Play();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
